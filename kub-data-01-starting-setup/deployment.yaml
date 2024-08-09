@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: marxu/kub-data-demo:2
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+          ports:                   
+            - containerPort: 3000
+      volumes:                     
+        - name: story-volume
+          # emptyDir: {}
+          # hostPath:
+          #   path: /data
+          #   type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: host-pvc
